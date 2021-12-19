@@ -154,9 +154,8 @@ async function updateCourses(courseId, course) {
     try {
         const record = await Courses.findByPk(courseId);
         if (record) {
-            await Courses.create({
-                courseId: course.courseCode,
-                courseCode: course.title,
+            await record.update({
+                name: course.name,
             });
         }
     }
