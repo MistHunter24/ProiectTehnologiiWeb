@@ -11,7 +11,7 @@ router
         try {
             const newNote = new Notes(request.body);
             if (newNote) {
-                if (request.body.courseCode == null || request.body.title == null || request.body.name === "" || request.body.title === "") {
+                if (request.body.courseCode == null || request.body.title == null || request.body.courseCode === "" || request.body.title === "") {
                     return response.status(400).json("CourseCode and Title cannot be null or empty!");
                 }
                 else if (request.body.body.length > 5000) {
@@ -81,9 +81,9 @@ router
     });
 
 router
-    .route("/notesByCourseCode/:courseId")
-    .get(async function getNotesByNoteId({ params: { courseId } }, response) {
-        const result = await sequelizeOperationsAPI.getNotesByNoteId(+courseId);
+    .route("/notesByCourseId/:courseId")
+    .get(async function getNotesByCourseId({ params: { courseId } }, response) {
+        const result = await sequelizeOperationsAPI.getNotesByCourseId(+courseId);
         if (Object.entries(result).length === 0) {
             return response.status(400).json("The entry does not exist yet");
         }

@@ -100,7 +100,7 @@ async function updateNotes(noteId, note) {
     }
 };
 
-async function getNotesByNoteId(courseId) {
+async function getNotesByCourseId(courseId) {
     try {
         return await Notes.findAll({
             include: [{
@@ -171,7 +171,7 @@ export var sequelizeOperationsAPI = {
     createNotes: createNotes,
     deleteNotes: deleteNotes,
     updateNotes: updateNotes,
-    getNotesByNoteId: getNotesByNoteId,
+    getNotesByCourseId: getNotesByCourseId,
     getCourses: getCourses,
     createCourses: createCourses,
     getCoursesById: getCoursesById,
