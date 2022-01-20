@@ -15,7 +15,7 @@ function Home() {
           color="primary"
           size="small"
           onClick={function onClick() {
-            navigate("/about");
+            navigate("/notes");
           }}
         >
           Go to about
@@ -25,7 +25,7 @@ function Home() {
           color="secondary"
           size="small"
           onClick={function onClick() {
-            navigate("/photos");
+            navigate("/courses");
           }}
         >
           Go to photos

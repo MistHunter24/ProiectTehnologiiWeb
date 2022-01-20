@@ -22,11 +22,11 @@ function Nav() {
           </Typography>
 
           <ul className="nav-links">
-            <Link to={"/about"} className="nav-link">
-              <li>Link to about</li>
+            <Link to={"/notes"} className="nav-link">
+              <li>Link to notes</li>
             </Link>
-            <Link to={"/photos"} className="nav-link">
-              <li>Link to photos</li>
+            <Link to={"/courses"} className="nav-link">
+              <li>Link to courses</li>
             </Link>
           </ul>
         </Toolbar>
