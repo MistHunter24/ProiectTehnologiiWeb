@@ -28,7 +28,6 @@ const App = () => {
   }
 
   //AddTask
-  //---comment here to remove add to server
 
   const addTask = async (task) => {
     console.log(task)
@@ -40,19 +39,14 @@ const App = () => {
       body: JSON.stringify(task),
     })
     const data = await res.json()
+    setTasks([...tasks, data])
 
-    //---comment until here to remove add to server
-
-    //--comment to add only in frontend
-
-    //   setTasks([...tasks, data])
     // const addTask = (task) => {
     //   const id = tasks.length + 1
     //   console.log(id)
     //   const newTask = { id, ...task }
     //   setTasks([...tasks, newTask])
 
-    //----comment until here to add only in frontend
   }
 
   //DeleteTask

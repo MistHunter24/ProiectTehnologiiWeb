@@ -6,7 +6,7 @@ import { sequelizeOperationsAPI } from "./operations-api.js";
 var sequelizeConnection = new Sequelize(
     "proiect_tw",
     "root",
-    "QAZxsw!234",
+    "1234",
     sequelizeConfigProps
 );
 //Defining tables
