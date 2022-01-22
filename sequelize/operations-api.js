@@ -1,6 +1,14 @@
 import seq from "sequelize";
 import { Courses, Notes } from "./sync.js";
 
+async function execAsyncRequest(asyncRequest) {
+    try {
+        return await asyncRequest();
+    } catch (err) {
+        throw err;
+    }
+}
+
 //Sequelize initialization
 async function sequelizeAuth(sequelizeConnection) {
     try {
@@ -45,6 +53,14 @@ async function testDatabasePopulation() {
         name: "Tehnologii Web",
         noteId: 2,
     });
+    await Courses.create({
+        name: "Mock pentru frontend 1",
+        noteId: 2,
+    });
+    await Courses.create({
+        name: "Mock pentru frontend 2",
+        noteId: 2,
+    });
 };
 
 //Notes
@@ -62,16 +78,14 @@ async function getNoteById(noteId) {
 }
 
 async function createNotes(note) {
-    try {
+    await execAsyncRequest(async function createNotes() {
         await Notes.create({
             courseCode: note.courseCode,
             title: note.title,
             body: note.body,
         });
-    }
-    catch (err) {
-        throw err;
-    }
+    });
+
 }
 
 async function deleteNotes(noteId) {
@@ -129,15 +143,13 @@ async function getCoursesById(courseId) {
 }
 
 async function createCourses(course) {
-    try {
+    await execAsyncRequest(async function createCourses() {
         await Courses.create({
-            courseId: course.courseCode,
-            courseCode: course.title,
+            courseId: course.courseId,
+            name: course.name,
+            noteId: noteId
         });
-    }
-    catch (err) {
-        throw err;
-    }
+    });
 }
 
 async function deleteCourses(courseId) {
@@ -164,6 +176,53 @@ async function updateCourses(courseId, course) {
     }
 };
 
+//select all entries - for frontend purposes
+
+async function getAllNotesForCourses() {
+    try {
+        return await Notes.findAll({
+            include: [{
+                model: Courses,
+                required: true
+            }]
+        })
+    }
+    catch (err) {
+        console.error(`Error while retireving info`);
+
+    }
+}
+
+async function deleteAllNotesForCourses(notesId) {
+    try {
+        const record = await Notes.findByPk(notesId);
+        if (record) await record.destroy();
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
+async function createNotesWithCourses(note) {
+    await execAsyncRequest(async function createNotesWithCourses() {
+        var result = await Notes.create({
+            courseCode: note.courseCode,
+            title: note.title,
+            body: note.body,
+        });
+        var { Courses: courses } = note;
+        courses.forEach((course) => {
+            Courses.create({
+                courseId: course.courseId,
+                name: course.name,
+                noteId: result.noteId,
+            });
+        });
+    });
+}
+
+
+
 export var sequelizeOperationsAPI = {
     init: initSequelize,
     getNotes: getNotes,
@@ -177,4 +236,7 @@ export var sequelizeOperationsAPI = {
     getCoursesById: getCoursesById,
     updateCourses: updateCourses,
     deleteCourses: deleteCourses,
+    getAllNotesForCourses: getAllNotesForCourses,
+    deleteAllNotesForCourses: deleteAllNotesForCourses,
+    createNotesWithCourses: createNotesWithCourses,
 };

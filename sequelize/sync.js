@@ -46,6 +46,7 @@ Notes.hasMany(Courses, {
     onUpdate: "RESTRICT",
     foreignKeyConstraint: true,
 });
+
 //Courses.belongsToMany(Notes, { through: 'courseCode' });
 
 sequelizeOperationsAPI.init(sequelizeConnection);

@@ -1,27 +1,92 @@
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./Components/Home";
-import GetCourses from "./Components/GetCourses.js"
-import GetNotes from "./Components/GetNotes.js"
-import Nav from "./Nav";
+import React from "react";
+import Header from "./components/Header";
+import Tasks from "./components/Tasks";
+import { useState, useEffect } from 'react'
+import AddTask from "./components/AddTask";
 
-function App() {
+const App = () => {
+
+  const [showAddTask, setShowAddTask] = useState(false)
+
+  const [tasks, setTasks] = useState([])
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks()
+      setTasks(tasksFromServer)
+    }
+    getTasks()
+  }, [])
+
+  //FetchData
+  const fetchTasks = async () => {
+    const res = await fetch('http://localhost:8000/api/allNotesForCourses')
+    const data = await res.json()
+
+    console.log(data)
+    return data
+  }
+
+  //AddTask
+  //---comment here to remove add to server
+
+  const addTask = async (task) => {
+    console.log(task)
+    const res = await fetch('http://localhost:8000/api/createNotesWithCourses', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(task),
+    })
+    const data = await res.json()
+
+    //---comment until here to remove add to server
+
+    //--comment to add only in frontend
+
+    //   setTasks([...tasks, data])
+    // const addTask = (task) => {
+    //   const id = tasks.length + 1
+    //   console.log(id)
+    //   const newTask = { id, ...task }
+    //   setTasks([...tasks, newTask])
+
+    //----comment until here to add only in frontend
+  }
+
+  //DeleteTask
+  const deleteTask = async (id) => {
+    console.log('delete', id)
+
+    await fetch(`http://localhost:8000/api/allNotesForCourses/${id}`, {
+      method: 'DELETE',
+    })
+
+    setTasks(tasks.filter((task) => task.noteId !== id))
+  }
+
+  //Reminder
+  const toggleReminder = (id) => {
+    console.log(id)
+    setTasks(tasks.map((task) => task.noteId === id ? { ...task, reminder: !task.reminder } : task))
+  }
 
   return (
-
-    <BrowserRouter>
-      <Nav />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/notes/:notesId" element={null} />
-        <Route path="/notes" element={<GetNotes />} />
-        <Route path="/courses" element={<GetCourses />} />
-        <Route path="/courses/:courseId" element={null} />
-
-
-
-      </Routes>
-    </BrowserRouter>
+    <div className="container">
+      <Header
+        onAdd={() => setShowAddTask(!showAddTask)}
+        propShowAdd={showAddTask} />
+      {showAddTask &&
+        <AddTask
+          onAdd={addTask} />}
+      {tasks.length > 0 ?
+        (<Tasks
+          tasks={tasks}
+          onDelete={deleteTask}
+          onToggle={toggleReminder} />) :
+        ('Nu exista notite')}
+    </div>
   );
 }
 

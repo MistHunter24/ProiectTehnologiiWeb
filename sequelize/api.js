@@ -25,7 +25,8 @@ router
         } catch (err) {
             console.error(`Error while calling api ${err}`);
         }
-    })
+    });
+
 router
     .route("/notes")
     .get(async function getNotes(_, response) {
@@ -112,7 +113,8 @@ router
         } catch (err) {
             console.error(`Error while calling api ${err}`);
         }
-    })
+    });
+
 router
     .route("/courses")
     .get(async function getCourses(_, response) {
@@ -166,3 +168,37 @@ router
             console.error(`Error while calling api: ${err}`)
         }
     });
+
+//new api for frontend purposes getAllNotesForCourses
+router
+    .route("/allNotesForCourses")
+    .get(async function getAllNotesForCourses(_, response) {
+        const result = await sequelizeOperationsAPI.getAllNotesForCourses();
+        if (Object.entries(result).length === 0) {
+            return response.status(400).json("Entries do not exist yet");
+        }
+
+        response.status(200).json(result)
+    });
+
+router
+    .route("/allNotesForCourses/:noteId")
+    .delete(async function deleteAllNotesForCourses({ params: { noteId } }, response) {
+        try {
+            await sequelizeOperationsAPI.deleteAllNotesForCourses(+noteId);
+            response.status(200).json("Success");
+        } catch (err) {
+            console.error(`Error while calling api: ${err}`)
+        }
+    });
+
+router.
+    route("/createNotesWithCourses").post(async ({ body }, res) => {
+        try {
+            await sequelizeOperationsAPI.createNotesWithCourses(body);
+            res.status(200).json("Success!");
+        } catch (err) {
+            console.error(`Error while calling API: ${err}`);
+        }
+    });
+
